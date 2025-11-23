@@ -433,11 +433,11 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT VSG_USE_DYNAMIC_CAST)
     target_compile_definitions(vsg PRIVATE VSG_EXPORTS)
 endif()
 
-# install headers
-install(DIRECTORY ${VSG_SOURCE_DIR}/include/vsg DESTINATION include)
+# install headers into the scoped include root
+install(DIRECTORY ${VSG_SOURCE_DIR}/include/vsg DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 if (NOT(${VSG_BINARY_DIR} STREQUAL ${VSG_SOURCE_DIR}))
-    install(DIRECTORY ${VSG_BINARY_DIR}/include/vsg DESTINATION include)
+    install(DIRECTORY ${VSG_BINARY_DIR}/include/vsg DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 endif()
 
 # install lib
