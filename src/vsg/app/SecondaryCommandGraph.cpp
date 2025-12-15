@@ -111,13 +111,15 @@ void SecondaryCommandGraph::record(ref_ptr<RecordedCommandBuffers> recordedComma
 
     commandBuffer->numDependentSubmissions().fetch_add(1);
 
-    recordTraversal->getState()->_commandBuffer = commandBuffer;
+    //recordTraversal->getState()->_commandBuffer = commandBuffer;
+    // hook up State to the command buffer so state->dirtyStateStacks() etc. are safe
+    recordTraversal->getState()->connect(commandBuffer);
 
     // or select index when maps to a dormant CommandBuffer
     VkCommandBuffer vk_commandBuffer = *commandBuffer;
 
     // need to set up the command buffer
-    // if we are nested within a CommandBuffer already then use VkCommandBufferInheritanceInfo
+    // if we are nested within a CommandBuffersetCurrentPipelineLayout already then use VkCommandBufferInheritanceInfo
     VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
