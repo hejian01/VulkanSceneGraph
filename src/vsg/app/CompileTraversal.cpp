@@ -340,6 +340,7 @@ void CompileTraversal::apply(SecondaryCommandGraph& secondaryCommandGraph)
     for (auto& context : contexts)
     {
         secondaryCommandGraph.maxSlots.merge(context->resourceRequirements.maxSlots);
+        secondaryCommandGraph.viewportStateHint = context->resourceRequirements.viewportStateHint;
 
         // save previous states to be restored after traversal
         auto previousRenderPass = context->renderPass;

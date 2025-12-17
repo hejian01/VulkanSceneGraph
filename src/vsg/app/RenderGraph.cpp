@@ -144,22 +144,25 @@ void RenderGraph::accept(RecordTraversal& recordTraversal) const
     renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
     renderPassInfo.pClearValues = clearValues.data();
 
-    recordTraversal.getState()->viewportStateHint = viewportStateHint;
+    auto* state = recordTraversal.getState();
+    state->viewportStateHint = (contents == VK_SUBPASS_CONTENTS_INLINE) ? viewportStateHint : 0;
 
-    VkCommandBuffer vk_commandBuffer = *(recordTraversal.getState()->_commandBuffer);
+    VkCommandBuffer vk_commandBuffer = *(state->_commandBuffer);
     vkCmdBeginRenderPass(vk_commandBuffer, &renderPassInfo, contents);
 
     // sync the viewportState and push
     viewportState->set(renderArea.offset.x, renderArea.offset.y, renderArea.extent.width, renderArea.extent.height);
 
-    if ((viewportStateHint & DYNAMIC_VIEWPORTSTATE))
+    bool recordDynamicViewport = (contents == VK_SUBPASS_CONTENTS_INLINE) && (viewportStateHint & DYNAMIC_VIEWPORTSTATE);
+
+    if (recordDynamicViewport)
     {
-        recordTraversal.getState()->pushView(viewportState);
+        state->pushView(viewportState);
 
         // traverse the subgraph to place commands into the command buffer.
         traverse(recordTraversal);
 
-        recordTraversal.getState()->popView(viewportState);
+        state->popView(viewportState);
     }
     else
     {

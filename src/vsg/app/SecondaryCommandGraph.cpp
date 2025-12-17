@@ -114,6 +114,7 @@ void SecondaryCommandGraph::record(ref_ptr<RecordedCommandBuffers> recordedComma
     //recordTraversal->getState()->_commandBuffer = commandBuffer;
     // hook up State to the command buffer so state->dirtyStateStacks() etc. are safe
     recordTraversal->getState()->connect(commandBuffer);
+    recordTraversal->getState()->viewportStateHint = viewportStateHint;
 
     // or select index when maps to a dormant CommandBuffer
     VkCommandBuffer vk_commandBuffer = *commandBuffer;

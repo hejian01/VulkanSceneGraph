@@ -13,6 +13,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 </editor-fold> */
 
 #include <vsg/app/CommandGraph.h>
+#include <vsg/state/ResourceHints.h>
 
 namespace vsg
 {
@@ -31,6 +32,7 @@ namespace vsg
         VkBool32 occlusionQueryEnable = VK_FALSE;
         VkQueryControlFlags queryFlags = 0;
         VkQueryPipelineStatisticFlags pipelineStatistics = 0;
+        uint32_t viewportStateHint = DYNAMIC_VIEWPORTSTATE;
 
         /// RenderPass to use passed to the VkCommandBufferInheritanceInfo in place of the framebuffer's or window's renderPass. renderPass must be compatible with the render pass used to create the window or framebuffer.
         ref_ptr<RenderPass> renderPass;
